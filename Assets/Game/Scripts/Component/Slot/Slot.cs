@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using CoinSortClone.Interfaces;
 using CoinSortClone.Manager;
@@ -10,10 +11,28 @@ namespace CoinSortClone.Component
         , IDetectable
     {
         [SerializeField] private Vector3 size;
+        [SerializeField] private float coinOffset;
+        [SerializeField] private float coinBeginingMargin;
+        [SerializeField] private uint maxCoin;
 
         private DetectableObjectData _detectableObjectData = new DetectableObjectData();
         private Border _border;
         private Stack<Coin> _lastCoinStack;
+
+        private void GetCoin()
+        {
+            Vector3 targetPos = _border.Max;
+            targetPos.y = 0;
+            targetPos.x = transform.position.x;
+            targetPos.z -= coinBeginingMargin;
+
+            for (int i = 0; i < maxCoin; i++)
+            {
+                GameObject coin = SharedLevelManager.Instance.GetCoin();
+                coin.transform.position = targetPos;
+                targetPos.z -= coinOffset;
+            }
+        }
 
         public void OnDetected()
         {
@@ -32,6 +51,12 @@ namespace CoinSortClone.Component
 
             _detectableObjectData.DetectableScript = this;
         }
+
+        // public void SetEnable()
+        // {
+        //     SetDetectableObjectData();
+        //     DetectorManager.Instance.AddDetectableObject(_detectableObjectData);
+        // }
 
         private void OnEnable()
         {

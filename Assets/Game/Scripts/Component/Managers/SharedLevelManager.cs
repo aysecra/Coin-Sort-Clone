@@ -17,7 +17,6 @@ namespace CoinSortClone.Manager
 
         private void Start()
         {
-            GetCoin(GetRandomCoin());
         }
 
         public CoinSO GetRandomCoin()
@@ -27,8 +26,9 @@ namespace CoinSortClone.Manager
             return _coinTypeList[rndIndex];
         }
 
-        public void GetCoin(CoinSO coinSo)
+        public GameObject GetCoin()
         {
+            CoinSO coinSo = GetRandomCoin();
             GameObject coinObject = coinPool.Pop();
             coinObject.SetActive(true);
 
@@ -38,6 +38,7 @@ namespace CoinSortClone.Manager
 
             GameObject coinModel = coinObject.GetComponentInChildren<MeshFilter>().gameObject;
             if (coinModel.TryGetComponent(out MeshRenderer meshRenderer)) meshRenderer.material = coinSo.Material;
+            return coinObject;
         }
     }
 }
