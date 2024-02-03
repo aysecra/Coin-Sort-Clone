@@ -1,31 +1,29 @@
 using System.Collections.Generic;
 using CoinSortClone.Component;
-using CoinSortClone.Interfaces;
+using CoinSortClone.Interface;
+using CoinSortClone.Logic;
 using CoinSortClone.Structs;
+using CoinSortClone.Structs.Event;
+using CoinSortClone.Enums;
 using UnityEngine;
 
 namespace CoinSortClone.Manager
 {
     public class DetectorManager : Singleton<DetectorManager>
-        , IUpdateListener
+        , EventListener<InputEvent>
     {
-        private List<DetectableObjectData> _detectableObjects = new List<DetectableObjectData>();
+        private HashSet<DetectableObjectData> _detectableObjects = new HashSet<DetectableObjectData>();
 
-        private void Start()
-        {
-            UpdateManager.Instance.AddListener(this);
-        }
-
-        void IUpdateListener.ManagedUpdate()
+        private void DetectObject(Vector3 position)
         {
             if (_detectableObjects.Count > 0)
             {
                 foreach (var detectableObject in _detectableObjects)
                 {
                     ScreenToWorldPointData screenToWorldPointData =
-                        CameraController.Instance.ScreenToWorldPoint(Input.mousePosition);
+                        CameraController.Instance.ScreenToWorldPoint(position);
 
-                    if (Logic.ObjectDetector.CalculateIsHitToObject(detectableObject, screenToWorldPointData))
+                    if (ObjectDetector.CalculateIsHitToObject(detectableObject, screenToWorldPointData))
                         detectableObject.DetectableScript.OnDetected();
                 }
             }
@@ -33,10 +31,7 @@ namespace CoinSortClone.Manager
 
         public void AddDetectableObject(DetectableObjectData detectableObject)
         {
-            if (!_detectableObjects.Contains(detectableObject))
-            {
-                _detectableObjects.Add(detectableObject);
-            }
+            _detectableObjects.Add(detectableObject);
         }
 
         public void RemoveDetectableObject(DetectableObjectData detectableObject)
@@ -47,11 +42,24 @@ namespace CoinSortClone.Manager
             }
         }
 
+        private void OnEnable()
+        {
+            EventManager.EventStartListening<InputEvent>(this);
+        }
+
         private void OnDisable()
         {
-            if(!gameObject.scene.isLoaded) return;
+            if (!gameObject.scene.isLoaded) return;
 
-            UpdateManager.Instance.RemoveListener(this);
+            EventManager.EventStopListening<InputEvent>(this);
+        }
+
+        public void OnEventTrigger(InputEvent currentEvent)
+        {
+            if (currentEvent.State == TouchState.Touch)
+            {
+                DetectObject(currentEvent.Position);
+            }
         }
     }
 }

@@ -5,7 +5,7 @@ namespace CoinSortClone.Structs
 {
     public struct DetectableObjectData
     {
-        public Mesh Mesh;
+        public Border Border;
         public Transform DetectableTransform;
         public IDetectable DetectableScript;
     }
