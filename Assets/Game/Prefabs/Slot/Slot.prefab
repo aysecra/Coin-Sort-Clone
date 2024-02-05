@@ -14,7 +14,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &5876606741673168953
 Transform:
@@ -47,7 +47,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &613462132921668461
 Transform:
@@ -77,10 +77,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b516ed91fa03a4841af45f11ed52fcdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slotSo: {fileID: 11400000, guid: a01b08e30628b487d9c0e791ea7852a5, type: 2}
+  isEnable: 0
   size: {x: 1.1, y: 0.67, z: 2.3}
-  coinOffset: 0.2
-  coinBeginingMargin: 0.1
-  maxCoin: 10
 --- !u!1 &7152925007112345958
 GameObject:
   m_ObjectHideFlags: 0
@@ -97,7 +96,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &6338353152697778627
 Transform:

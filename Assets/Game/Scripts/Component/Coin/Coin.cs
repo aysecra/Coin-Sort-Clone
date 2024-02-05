@@ -1,4 +1,5 @@
 using CoinSortClone.SO;
+using TMPro;
 using UnityEngine;
 
 namespace CoinSortClone.Component
@@ -6,7 +7,9 @@ namespace CoinSortClone.Component
     public struct Coin
     {
         public CoinSO CoinType;
-        public GameObject GameObject;
+        public Transform Transform;
+        public TMP_Text Text;
+        public MeshRenderer MeshRenderer;
 
         public bool IsEqual(Coin coin)
         {

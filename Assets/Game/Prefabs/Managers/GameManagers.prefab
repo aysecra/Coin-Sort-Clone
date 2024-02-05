@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 429859770921052972}
-  - component: {fileID: 1978003560843592424}
+  - component: {fileID: 3716418116785338255}
   m_Layer: 0
   m_Name: CoinPool
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4962403475541732221}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1978003560843592424
+--- !u!114 &3716418116785338255
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,12 +41,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1478700683132542104}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd424568529e4d35941710e6b5154f0d, type: 3}
+  m_Script: {fileID: 11500000, guid: b9bd9eaf0b344c3697a4ae27d8884616, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 5972092406232028799, guid: eaba257ed1f304d449b43bcbd17fe60f, type: 3}
   parentObject: {fileID: 429859770921052972}
-  amountToPool: 5
+  amountToPool: 30
   isAllObjectActive: 0
 --- !u!1 &4962403475541732211
 GameObject:
@@ -133,6 +133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2550a188b67f4f1f909f6342df18ccf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coinPool: {fileID: 1978003560843592424}
+  coinPool: {fileID: 3716418116785338255}
   _coinTypeList:
   - {fileID: 11400000, guid: 0b4a5ea9ceeb149af8e45bdc3de3cac3, type: 2}
+  - {fileID: 11400000, guid: aeedde678e49d47bdaf0e3e350f4f8c2, type: 2}

@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using CoinSortClone.Component;
+using CoinSortClone.Logic;
 using CoinSortClone.Pattern;
 using CoinSortClone.SO;
-using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -10,13 +11,17 @@ namespace CoinSortClone.Manager
 {
     public class SharedLevelManager : PersistentSingleton<SharedLevelManager>
     {
-        [SerializeField] private StackedGameObjectPool coinPool;
+        [SerializeField] private SpecialCoinPool coinPool;
         [SerializeField] private List<CoinSO> _coinTypeList = new List<CoinSO>();
 
         private object _nullObject = null;
 
-        private void Start()
+        protected override void Awake()
         {
+            base.Awake();
+            EventManager.Clear();
+            SlotController.Clear();
+            SlotSelectionController.Clear();
         }
 
         public CoinSO GetRandomCoin()
@@ -26,19 +31,17 @@ namespace CoinSortClone.Manager
             return _coinTypeList[rndIndex];
         }
 
-        public GameObject GetCoin()
+        public Coin GetCoin(CoinSO coinSo)
         {
-            CoinSO coinSo = GetRandomCoin();
-            GameObject coinObject = coinPool.Pop();
-            coinObject.SetActive(true);
+            Coin coin = coinPool.Pop();
+            coin.CoinType = coinSo;
+            coin.Transform.gameObject.SetActive(true);
 
-            TMP_Text text = coinObject.GetComponentInChildren<TMP_Text>();
-            text.text = $"{coinSo.Value}";
-            text.color = coinSo.Color;
+            coin.Text.text = $"{coinSo.Value}";
+            coin.Text.color = coinSo.Color;
 
-            GameObject coinModel = coinObject.GetComponentInChildren<MeshFilter>().gameObject;
-            if (coinModel.TryGetComponent(out MeshRenderer meshRenderer)) meshRenderer.material = coinSo.Material;
-            return coinObject;
+            coin.MeshRenderer.material = coinSo.Material;
+            return coin;
         }
     }
 }

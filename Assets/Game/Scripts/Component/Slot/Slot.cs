@@ -1,42 +1,46 @@
-using System;
 using System.Collections.Generic;
 using CoinSortClone.Interfaces;
+using CoinSortClone.Logic;
 using CoinSortClone.Manager;
+using CoinSortClone.SO;
 using CoinSortClone.Structs;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace CoinSortClone.Component
 {
     public class Slot : MonoBehaviour
         , IDetectable
     {
+        [SerializeField] private SlotSO slotSo;
+        [SerializeField] private bool isEnable;
         [SerializeField] private Vector3 size;
-        [SerializeField] private float coinOffset;
-        [SerializeField] private float coinBeginingMargin;
-        [SerializeField] private uint maxCoin;
 
         private DetectableObjectData _detectableObjectData = new DetectableObjectData();
         private Border _border;
         private Stack<Coin> _lastCoinStack;
 
-        private void GetCoin()
+        private void AddStartingCoin()
         {
             Vector3 targetPos = _border.Max;
             targetPos.y = 0;
             targetPos.x = transform.position.x;
-            targetPos.z -= coinBeginingMargin;
+            targetPos.z -= slotSo.CoinBeginingMargin;
+            int amount = Random.Range(slotSo.MinSpawnCount, slotSo.MaxSpawnCount);
+            CoinSO type = SharedLevelManager.Instance.GetRandomCoin();
 
-            for (int i = 0; i < maxCoin; i++)
+            for (int i = 0; i < amount; i++)
             {
-                GameObject coin = SharedLevelManager.Instance.GetCoin();
-                coin.transform.position = targetPos;
-                targetPos.z -= coinOffset;
+                Coin coin = SharedLevelManager.Instance.GetCoin(type);
+                coin.Transform.transform.position = targetPos;
+                targetPos.z -= slotSo.CoinOffset;
+                SlotController.AddCoinToSlot(this, coin);
             }
         }
 
         public void OnDetected()
         {
-            _lastCoinStack = SlotController.GetLastCoinStackFromSlot(this);
+            SlotSelectionController.Select(this);
         }
 
         private void SetDetectableObjectData()
@@ -52,16 +56,18 @@ namespace CoinSortClone.Component
             _detectableObjectData.DetectableScript = this;
         }
 
-        // public void SetEnable()
-        // {
-        //     SetDetectableObjectData();
-        //     DetectorManager.Instance.AddDetectableObject(_detectableObjectData);
-        // }
-
-        private void OnEnable()
+        public void SetEnable()
         {
             SetDetectableObjectData();
             DetectorManager.Instance.AddDetectableObject(_detectableObjectData);
+            SlotController.AddSlot(this);
+        }
+
+        private void OnEnable()
+        {
+            if (!isEnable) return;
+            SetEnable();
+            AddStartingCoin();
         }
 
         private void OnDisable()
