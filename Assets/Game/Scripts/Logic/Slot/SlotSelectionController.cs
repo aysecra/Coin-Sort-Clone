@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using CoinSortClone.Component;
+using CoinSortClone.Data;
 using UnityEngine;
 
 namespace CoinSortClone.Logic
@@ -28,13 +29,18 @@ namespace CoinSortClone.Logic
             {
                 Stack<Coin> selectedStack = SlotController.GetLastCoinStackFromSlot(slot);
 
-                foreach (Coin coin in selectedStack)
-                {
-                    _slotPosition = coin.Transform.transform.position;
-                    _slotPosition.y = 0;
-                    coin.Transform.position = _slotPosition;
-                    _isSelected = false;
-                }
+                if (_selectedSlot.GetInstanceID() != slot.GetInstanceID())
+                    SlotController.Move(_selectedSlot, slot);
+
+                else
+                    foreach (Coin coin in selectedStack)
+                    {
+                        _slotPosition = coin.Transform.transform.position;
+                        _slotPosition.y = 0;
+                        coin.Transform.position = _slotPosition;
+                    }
+
+                _isSelected = false;
             }
         }
 

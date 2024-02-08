@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using CoinSortClone.Component;
+using CoinSortClone.Data;
 using TMPro;
 using UnityEngine;
 
@@ -32,7 +32,7 @@ namespace CoinSortClone.Pattern
             Coin coin = new Coin()
             {
                 Transform = newObject.transform,
-                Text = newObject.GetComponentInChildren<TMP_Text>(),
+                Text = newObject.GetComponentsInChildren<TMP_Text>(),
                 MeshRenderer = coinModel.GetComponent<MeshRenderer>()
             };
             _poolStack.Push(coin);

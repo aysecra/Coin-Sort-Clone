@@ -1,6 +1,5 @@
-using System;
 using System.Collections.Generic;
-using CoinSortClone.Component;
+using CoinSortClone.Data;
 using CoinSortClone.Logic;
 using CoinSortClone.Pattern;
 using CoinSortClone.SO;
@@ -16,14 +15,6 @@ namespace CoinSortClone.Manager
 
         private object _nullObject = null;
 
-        protected override void Awake()
-        {
-            base.Awake();
-            EventManager.Clear();
-            SlotController.Clear();
-            SlotSelectionController.Clear();
-        }
-
         public CoinSO GetRandomCoin()
         {
             if (_coinTypeList.Count == 0) return (CoinSO) _nullObject;
@@ -37,11 +28,21 @@ namespace CoinSortClone.Manager
             coin.CoinType = coinSo;
             coin.Transform.gameObject.SetActive(true);
 
-            coin.Text.text = $"{coinSo.Value}";
-            coin.Text.color = coinSo.Color;
+            foreach (var text in coin.Text)
+            {
+                text.text = $"{coinSo.Value}";
+                text.color = coinSo.Color;
+            }
 
             coin.MeshRenderer.material = coinSo.Material;
             return coin;
+        }
+
+        private void OnEnable()
+        {
+            EventManager.Clear();
+            SlotController.Clear();
+            SlotSelectionController.Clear();
         }
     }
 }

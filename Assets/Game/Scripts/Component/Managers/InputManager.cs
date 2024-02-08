@@ -4,14 +4,13 @@ using CoinSortClone.Logic;
 using CoinSortClone.Manager;
 using CoinSortClone.Structs.Event;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace CoinSortClone.Component.Manager
 {
     public class InputManager : Singleton<InputManager>
         , IUpdateListener
     {
-        [SerializeField] private float detectInputDelay = .65f;
-
         private Vector3 _firstPosition;
         private Vector3 _endPosition;
 

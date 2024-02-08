@@ -6,5 +6,6 @@ namespace CoinSortClone.Structs
     {
         public Vector3 Min;
         public Vector3 Max;
+        public Vector3 Center;
     }
 }

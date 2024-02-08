@@ -10,6 +10,9 @@ namespace CoinSortClone.SO
         [SerializeField] private uint maxCoin;
         [SerializeField] private int minSpawnCount  = 2;
         [SerializeField] private int maxSpawnCount  = 4;
+        [SerializeField] private float coinDelay = .5f;
+        [SerializeField] private float movementDuration = .5f;
+        [SerializeField] private int movementJumpPower = 3;
 
         public float CoinOffset => coinOffset;
 
@@ -20,5 +23,11 @@ namespace CoinSortClone.SO
         public int MinSpawnCount => minSpawnCount;
 
         public int MaxSpawnCount => maxSpawnCount;
+
+        public float CoinDelay => coinDelay;
+
+        public float MovementDuration => movementDuration;
+
+        public int MovementJumpPower => movementJumpPower;
     }
 }

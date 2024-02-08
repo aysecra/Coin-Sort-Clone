@@ -13,7 +13,10 @@ MonoBehaviour:
   m_Name: Slot Item
   m_EditorClassIdentifier: 
   coinOffset: 0.2
-  coinBeginingMargin: 0.1
+  coinBeginingMargin: 0.7
   maxCoin: 10
   minSpawnCount: 2
   maxSpawnCount: 4
+  coinDelay: 0.1
+  movementDuration: 0.5
+  movementJumpPower: 3

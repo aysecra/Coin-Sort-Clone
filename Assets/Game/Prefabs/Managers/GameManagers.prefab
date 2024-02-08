@@ -57,7 +57,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4962403475541732221}
+  - component: {fileID: 8416047665623118965}
   - component: {fileID: 4962403475541732222}
+  - component: {fileID: 2263720646828087195}
   - component: {fileID: 4962403475541732220}
   - component: {fileID: 4970821606657222267}
   - component: {fileID: 1659614818120655953}
@@ -84,6 +86,20 @@ Transform:
   - {fileID: 429859770921052972}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8416047665623118965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4962403475541732211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08c8652105b014e9f9ff5087afb2771f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _levelCompleteDelay: 0.5
+  _levelFailDelay: 0.5
 --- !u!114 &4962403475541732222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,6 +112,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ffa0dc159f28400a8f18fe3185c366e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2263720646828087195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4962403475541732211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0981534fab2474a39af4a8072168f505, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameSettings: {fileID: 11400000, guid: 1e1b65cfe81cc4138bedea1c06a8ec8c, type: 2}
+  costSo: {fileID: 11400000, guid: aecd26f69e0414a829928d33f9f81689, type: 2}
+  levels:
+  - LevelName: TestScene_001
 --- !u!114 &4962403475541732220
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -120,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cb436075028945b3b5b3ac1a4c097fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectInputDelay: 0.65
+  inputSystem: {fileID: 0}
 --- !u!114 &1659614818120655953
 MonoBehaviour:
   m_ObjectHideFlags: 0
