@@ -2,7 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using CoinSortClone.Component;
 using CoinSortClone.Data;
-using UnityEditor.VersionControl;
+using CoinSortClone.Manager;
+using CoinSortClone.Pattern;
 using UnityEngine;
 using Task = System.Threading.Tasks.Task;
 
@@ -15,6 +16,7 @@ namespace CoinSortClone.Logic
         private static Stack<Coin> _lastCoinStack = new Stack<Coin>();
         private static List<Slot> _slotList = new List<Slot>();
         private static Coin _nullCoin = null;
+        private static Coin _lastCoin;
 
         public static void AddSlot(Slot slot, bool isEnable)
         {
@@ -22,7 +24,7 @@ namespace CoinSortClone.Logic
 
             if (!_slotList.Contains(slot))
                 _slotList.Add(slot);
-            
+
             if (isEnable)
             {
                 _slotDictionary[slot] = new Stack<Coin>();
@@ -39,27 +41,13 @@ namespace CoinSortClone.Logic
         {
             await Task.Delay(20);
 
-            // _slotList = _slotList.OrderBy(slot => slot.Border.Center.z)
-            //     .ThenBy(slot => slot.Border.Center.x).ToList();
-
-            _slotList = _slotList.OrderBy(slot => slot.Border.Center.x).ToList();
-            _slotList = _slotList.OrderBy(slot => slot.Border.Center.z).ToList();
+            _slotList = _slotList.OrderBy(slot => slot.Border.Center.z)
+                .ThenBy(slot => slot.Border.Center.x).ToList();
         }
 
-        public static void Move(Slot selected, Slot target)
+        public static Coin PopFromSlot(Slot slot)
         {
-            Coin lastCoin = GetLastCoin(target);
-            if (!GetLastCoin(selected).IsEqual(lastCoin) && lastCoin != _nullCoin)
-                return;
-
-            Stack<Coin> coins = GetLastCoinStackFromSlot(selected);
-            int direction = target.transform.position.x >= selected.transform.position.x ? 1 : -1;
-            target.Move(coins, direction);
-            selected.DecreaseCoin(coins.Count);
-            for (int i = 0; i < coins.Count; i++)
-            {
-                _slotDictionary[selected].Pop();
-            }
+            return _slotDictionary[slot].Pop();
         }
 
         public static void Deal()
@@ -74,12 +62,23 @@ namespace CoinSortClone.Logic
 
         public static void Merge()
         {
+            foreach (var slot in _slotDictionary.Keys.Where(slot => slot.IsMergeable))
+            {
+                CoinMovement.Instance.Merge(slot, GetLastCoinStackFromSlot(slot));
+            }
+        }
+
+        public static void RemoveLastCoin(Slot slot)
+        {
+            Coin coin = PopFromSlot(slot);
+            coin.Transform.gameObject.SetActive(false);
+            SharedLevelManager.Instance.GetBackCoin(coin);
         }
 
         public static bool MergeControl(Slot slot)
         {
             Coin last = GetLastCoin(slot);
-            
+
             foreach (var coin in _slotDictionary[slot])
             {
                 if (!last.IsEqual(coin)) return false;
@@ -88,7 +87,7 @@ namespace CoinSortClone.Logic
             return true;
         }
 
-        public static Stack<Coin> GetLastCoinStackFromSlot(Slot slot)
+        public static Stack<Coin> GetLastCoinStackFromSlot(Slot slot, int targetCount = 0)
         {
             _lastCoinStack.Clear();
 
@@ -96,16 +95,21 @@ namespace CoinSortClone.Logic
                 return _lastCoinStack;
 
             Coin last = _slotDictionary[slot].Peek();
+            int counter = 0;
 
             foreach (var current in _slotDictionary[slot].TakeWhile(current => current.IsEqual(last)))
             {
+                if (targetCount != 0 && counter == targetCount)
+                    break;
+
                 _lastCoinStack.Push(current);
+                counter++;
             }
 
             return _lastCoinStack;
         }
 
-        private static Coin GetLastCoin(Slot slot)
+        public static Coin GetLastCoin(Slot slot)
         {
             return _slotDictionary[slot].Count > 0 ? _slotDictionary[slot].Peek() : _nullCoin;
         }
@@ -115,7 +119,7 @@ namespace CoinSortClone.Logic
             _slotDictionary.Clear();
             _lastCoinStack.Clear();
             _slotList.Clear();
-            OrderSlot();
+            // OrderSlot();
         }
     }
 }

@@ -20,3 +20,5 @@ MonoBehaviour:
   coinDelay: 0.1
   movementDuration: 0.5
   movementJumpPower: 3
+  mergeDurationPerDist: 0.075
+  mergeDelay: 0.05

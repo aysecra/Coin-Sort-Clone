@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using CoinSortClone.Data;
 using CoinSortClone.Interfaces;
@@ -6,7 +5,6 @@ using CoinSortClone.Logic;
 using CoinSortClone.Manager;
 using CoinSortClone.SO;
 using CoinSortClone.Structs;
-using DG.Tweening;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -28,51 +26,23 @@ namespace CoinSortClone.Component
         private Stack<Coin> _lastCoinStack;
 
         private Vector3 _startPos;
-        private WaitForSeconds _waitForSeconds;
         private int _coinCount;
         private Vector3 _targetPos;
         private bool _isFull;
+        private bool _isMergaeble;
 
         public bool IsFull => _isFull;
+        public bool IsMergeable => _isMergaeble;
 
         public Border Border => _border;
+
+        public Vector3 StartPos => _startPos;
+
+        public int CoinCount => _coinCount;
 
         public void OnDetected()
         {
             SlotSelectionController.Select(this);
-        }
-
-        public void Move(Stack<Coin> coins, int direction)
-        {
-            StartCoroutine(IMove(coins, direction));
-        }
-
-        IEnumerator IMove(Stack<Coin> coins, int direction)
-        {
-            foreach (Coin coin in coins)
-            {
-                Quaternion startRotation = coin.Transform.rotation;
-                Vector3 rot = startRotation.eulerAngles;
-                rot = new Vector3(-rot.x, rot.y + direction * 180, rot.z);
-                Quaternion target = Quaternion.Euler(rot);
-                float rotationTime = 0;
-
-                _targetPos = _startPos;
-                _targetPos.z -= _coinCount * slotSo.CoinOffset;
-
-                coin.Transform.DOJump(_targetPos, slotSo.MovementJumpPower, 1, slotSo.MovementDuration)
-                    .OnUpdate((() =>
-                    {
-                        var factor = rotationTime / slotSo.MovementDuration;
-                        coin.Transform.rotation = Quaternion.Lerp(startRotation, target, factor);
-                        rotationTime += Time.deltaTime;
-                    }))
-                    .OnComplete((() => { coin.Transform.rotation = target; }));
-
-                SlotController.AddCoinToSlot(this, coin);
-                _coinCount++;
-                yield return _waitForSeconds;
-            }
         }
 
         public void AddCoin()
@@ -97,16 +67,43 @@ namespace CoinSortClone.Component
                 }
             }
 
+            ControlIsFull();
+        }
+
+        public void SetNotMergeable()
+        {
+            _isFull = false;
+            _isMergaeble = _isFull;
+            mergeableObject.SetActive(_isFull);
+        }
+
+        public void ControlIsFull()
+        {
             if (_coinCount >= slotSo.MaxCoin)
             {
                 _isFull = true;
-                if (SlotController.MergeControl(this)) mergeableObject.SetActive(_isFull);
+                if (SlotController.MergeControl(this))
+                {
+                    _isMergaeble = _isFull;
+                    mergeableObject.SetActive(_isFull);
+                }
             }
         }
 
         public void DecreaseCoin(int count)
         {
             _coinCount -= count;
+        }
+
+        public void IncreaseCoin(int count)
+        {
+            _coinCount += count;
+        }
+
+        public int ControlCoinCapacity()
+        {
+            ControlIsFull();
+            return (int) (slotSo.MaxCoin - _coinCount);
         }
 
         private void SetBeginingPosition()
@@ -133,7 +130,6 @@ namespace CoinSortClone.Component
 
         public void SetEnable()
         {
-            _waitForSeconds = new WaitForSeconds(slotSo.CoinDelay);
             SetDetectableObjectData();
             DetectorManager.Instance.AddDetectableObject(_detectableObjectData);
             SlotController.AddSlot(this, isEnable);

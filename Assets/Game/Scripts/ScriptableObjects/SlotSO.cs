@@ -13,6 +13,8 @@ namespace CoinSortClone.SO
         [SerializeField] private float coinDelay = .5f;
         [SerializeField] private float movementDuration = .5f;
         [SerializeField] private int movementJumpPower = 3;
+        [SerializeField] private float mergeDurationPerDist = .3f;
+        [SerializeField] private float mergeDelay = .1f;
 
         public float CoinOffset => coinOffset;
 
@@ -29,5 +31,9 @@ namespace CoinSortClone.SO
         public float MovementDuration => movementDuration;
 
         public int MovementJumpPower => movementJumpPower;
+
+        public float MergeDurationPerDist => mergeDurationPerDist;
+
+        public float MergeDelay => mergeDelay;
     }
 }

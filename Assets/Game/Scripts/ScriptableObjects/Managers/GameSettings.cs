@@ -45,7 +45,7 @@ namespace CoinSortClone.SO
                     (T, bool) result = (JsonUtility.FromJson<T>(loadPlayerData), true);
                     return result;
                 }
-                catch (Exception e)
+                catch
                 {
                     Directory.CreateDirectory(dirPath);
                     return (default, false);

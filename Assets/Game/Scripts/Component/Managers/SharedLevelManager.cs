@@ -38,6 +38,11 @@ namespace CoinSortClone.Manager
             return coin;
         }
 
+        public void GetBackCoin(Coin coin)
+        {
+            coinPool.Push(coin);
+        }
+
         private void OnEnable()
         {
             EventManager.Clear();
