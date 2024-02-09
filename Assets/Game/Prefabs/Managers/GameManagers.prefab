@@ -152,7 +152,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cb436075028945b3b5b3ac1a4c097fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputSystem: {fileID: 0}
 --- !u!114 &1659614818120655953
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -166,6 +165,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coinPool: {fileID: 3716418116785338255}
-  _coinTypeList:
-  - {fileID: 11400000, guid: 0b4a5ea9ceeb149af8e45bdc3de3cac3, type: 2}
-  - {fileID: 11400000, guid: aeedde678e49d47bdaf0e3e350f4f8c2, type: 2}
+  coinsSo: {fileID: 11400000, guid: 9afd0da730a2341c08ae53b11df2c304, type: 2}

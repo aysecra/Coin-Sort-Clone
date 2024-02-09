@@ -25,11 +25,10 @@ namespace CoinSortClone.Logic
             if (!_slotList.Contains(slot))
                 _slotList.Add(slot);
 
-            if (isEnable)
-            {
-                _slotDictionary[slot] = new Stack<Coin>();
-                _emptySlotDictionary[slot] = _slotDictionary[slot];
-            }
+            if (!isEnable) return;
+
+            _slotDictionary[slot] = new Stack<Coin>();
+            _emptySlotDictionary[slot] = _slotDictionary[slot];
         }
 
         public static void AddCoinToSlot(Slot slot, Coin coin)

@@ -4,6 +4,7 @@ using System.Linq;
 using CoinSortClone.Component;
 using CoinSortClone.Data;
 using CoinSortClone.Logic;
+using CoinSortClone.Manager;
 using CoinSortClone.SO;
 using DG.Tweening;
 using UnityEngine;
@@ -65,15 +66,22 @@ namespace CoinSortClone.Component
             int counter = 0;
             slot.SetNotMergeable();
 
-            foreach (var coin in coins.Where(coin => counter < coins.Count - 1))
+            foreach (var coin in coins)
             {
-                _targetPos = slot.StartPos;
-                coin.Transform.DOMove(slot.StartPos,
-                        slotSo.MergeDurationPerDist * Vector3.Distance(slot.StartPos, coin.Transform.position))
-                    .OnComplete((() => { SlotController.RemoveLastCoin(slot); }));
-                counter++;
+                if (counter < coins.Count - 1)
+                {
+                    _targetPos = slot.StartPos;
+                    coin.Transform.DOMove(slot.StartPos,
+                            slotSo.MergeDurationPerDist * Vector3.Distance(slot.StartPos, coin.Transform.position))
+                        .OnComplete((() => { SlotController.RemoveLastCoin(slot); }));
+                    counter++;
 
-                yield return _waitForSeconds;
+                    yield return _waitForSeconds;
+                }
+                else
+                {
+                    SharedLevelManager.Instance.IncreaseCoinValue(coin);
+                }
             }
 
             slot.DecreaseCoin(coins.Count - 1);

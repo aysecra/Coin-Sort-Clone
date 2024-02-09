@@ -32,12 +32,7 @@ namespace CoinSortClone
             if (data.Item2) _playerData = data.Item1;
             else
             {
-                _playerData = new PlayerData
-                {
-                    LevelName = levels[0].LevelName,
-                    LevelIndex = 0
-                };
-                SaveAsyncPlayerData();
+                ClearData();
             }
         }
 
@@ -46,27 +41,27 @@ namespace CoinSortClone
             gameSettings.SaveToJSON(_playerData, true);
         }
 
-        private void LoadPlayerData()
-        {
-            if (PlayerPrefs.HasKey(_playerDataPrefKey))
-            {
-                _playerData = JsonUtility.FromJson<PlayerData>(PlayerPrefs.GetString(_playerDataPrefKey));
-            }
-
-            else if (!PlayerPrefs.HasKey(_playerDataPrefKey) && levels.Count > 0)
-            {
-                _playerData = new PlayerData
-                {
-                    LevelName = levels[0].LevelName,
-                    LevelIndex = 0
-                };
-            }
-        }
-
-        private void SetPlayerData()
-        {
-            PlayerPrefs.SetString(_playerDataPrefKey, JsonUtility.ToJson(_playerData));
-        }
+        // private void LoadPlayerData()
+        // {
+        //     if (PlayerPrefs.HasKey(_playerDataPrefKey))
+        //     {
+        //         _playerData = JsonUtility.FromJson<PlayerData>(PlayerPrefs.GetString(_playerDataPrefKey));
+        //     }
+        //
+        //     else if (!PlayerPrefs.HasKey(_playerDataPrefKey) && levels.Count > 0)
+        //     {
+        //         _playerData = new PlayerData
+        //         {
+        //             LevelName = levels[0].LevelName,
+        //             LevelIndex = 0
+        //         };
+        //     }
+        // }
+        //
+        // private void SetPlayerData()
+        // {
+        //     PlayerPrefs.SetString(_playerDataPrefKey, JsonUtility.ToJson(_playerData));
+        // }
 
         private void SetNextLevel()
         {
@@ -83,7 +78,32 @@ namespace CoinSortClone
         public string GetNextLevelName()
         {
             int index = _playerData.LevelIndex + 1 < levels.Count ? _playerData.LevelIndex + 1 : 0;
+            SaveAsyncPlayerData();
             return levels[index].LevelName;
+        }
+
+        public uint GetLastOpenedCoin()
+        {
+            return _playerData.LastOpenedCoin;
+        }
+
+        public void IncreaseOpenedCoin()
+        {
+            _playerData.LastOpenedCoin++;
+            SaveAsyncPlayerData();
+        }
+
+        public void ClearData()
+        {
+            _playerData = new PlayerData
+            {
+                LevelName = levels[0].LevelName,
+                LevelIndex = 0,
+                Gold = 200,
+                CoinDataList = new List<CoinData>(),
+                LastOpenedCoin = 2
+            };
+            SaveAsyncPlayerData();
         }
 
         private void OnEnable()

@@ -31,7 +31,6 @@ namespace CoinSortClone.Component
         private bool _isFull;
         private bool _isMergaeble;
 
-        public bool IsFull => _isFull;
         public bool IsMergeable => _isMergaeble;
 
         public Border Border => _border;
@@ -79,14 +78,13 @@ namespace CoinSortClone.Component
 
         public void ControlIsFull()
         {
-            if (_coinCount >= slotSo.MaxCoin)
+            if (_coinCount < slotSo.MaxCoin) return;
+
+            _isFull = true;
+            if (SlotController.MergeControl(this))
             {
-                _isFull = true;
-                if (SlotController.MergeControl(this))
-                {
-                    _isMergaeble = _isFull;
-                    mergeableObject.SetActive(_isFull);
-                }
+                _isMergaeble = _isFull;
+                mergeableObject.SetActive(_isFull);
             }
         }
 
@@ -128,17 +126,18 @@ namespace CoinSortClone.Component
             _detectableObjectData.DetectableScript = this;
         }
 
-        public void SetEnable()
+        public void SetEnable(bool condition)
         {
+            isEnable = condition;
             SetDetectableObjectData();
             DetectorManager.Instance.AddDetectableObject(_detectableObjectData);
-            SlotController.AddSlot(this, isEnable);
+            SlotController.AddSlot(this, condition);
             mergeableObject.SetActive(_isFull);
         }
 
         private void OnEnable()
         {
-            SetEnable();
+            SetEnable(isEnable);
             enableObject.SetActive(isEnable);
             disableObject.SetActive(!isEnable);
             SetBeginingPosition();

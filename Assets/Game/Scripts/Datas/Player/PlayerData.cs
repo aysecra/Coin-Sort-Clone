@@ -9,5 +9,7 @@ namespace CoinSortClone.Data
         public int LevelIndex;
         public string LevelName;
         public List<CoinData> CoinDataList;
+        public uint Gold;
+        public uint LastOpenedCoin;
     }
 }
