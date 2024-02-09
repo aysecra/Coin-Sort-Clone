@@ -1,9 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CoinSortClone.Component;
 using CoinSortClone.Data;
 using CoinSortClone.Manager;
-using CoinSortClone.Pattern;
 using UnityEngine;
 using Task = System.Threading.Tasks.Task;
 
@@ -12,11 +12,11 @@ namespace CoinSortClone.Logic
     public static class SlotController
     {
         private static Dictionary<Slot, Stack<Coin>> _slotDictionary = new Dictionary<Slot, Stack<Coin>>();
-        private static Dictionary<Slot, Stack<Coin>> _emptySlotDictionary = new Dictionary<Slot, Stack<Coin>>();
         private static Stack<Coin> _lastCoinStack = new Stack<Coin>();
         private static List<Slot> _slotList = new List<Slot>();
         private static Coin _nullCoin = null;
         private static Coin _lastCoin;
+        private static int _firstEmptySlotIndex = -1;
 
         public static void AddSlot(Slot slot, bool isEnable)
         {
@@ -28,7 +28,6 @@ namespace CoinSortClone.Logic
             if (!isEnable) return;
 
             _slotDictionary[slot] = new Stack<Coin>();
-            _emptySlotDictionary[slot] = _slotDictionary[slot];
         }
 
         public static void AddCoinToSlot(Slot slot, Coin coin)
@@ -40,8 +39,44 @@ namespace CoinSortClone.Logic
         {
             await Task.Delay(20);
 
-            _slotList = _slotList.OrderBy(slot => slot.Border.Center.z)
-                .ThenBy(slot => slot.Border.Center.x).ToList();
+            // _slotList = _slotList.OrderBy(slot => slot.Border.Center.z)
+            //     .ThenBy(slot => slot.Border.Center.x).ToList();
+
+            _slotList.Sort(CompareSlot);
+
+            for (int i = 0; i < _slotList.Count; i++)
+            {
+                if (_slotList[i].IsEnable) continue;
+                _firstEmptySlotIndex = i;
+                ProgressManager.Instance.SetSlotIndex(i);
+                break;
+            }
+
+            if (_firstEmptySlotIndex >= 0)
+            {
+                _slotList[_firstEmptySlotIndex].ShowSlotPrice(ProgressManager.Instance.CalculateSlotPrice());
+            }
+        }
+
+        public static void IncreaseSlotIndex()
+        {
+            _firstEmptySlotIndex++;
+            ProgressManager.Instance.SetSlotIndex(_firstEmptySlotIndex);
+            _slotList[_firstEmptySlotIndex].ShowSlotPrice(ProgressManager.Instance.CalculateSlotPrice());
+        }
+
+        private static int CompareSlot(Slot a, Slot b)
+        {
+            Vector3 va = a.Border.Center;
+            Vector3 vb = b.Border.Center;
+
+            if (Mathf.Abs(va.z - vb.z) < 0.001f)
+            {
+                if (Mathf.Abs(va.x - vb.x) < 0.001f) return 0;
+                return va.x < vb.x ? -1 : 1;
+            }
+
+            return va.z < vb.z ? -1 : 1;
         }
 
         public static Coin PopFromSlot(Slot slot)
@@ -118,7 +153,7 @@ namespace CoinSortClone.Logic
             _slotDictionary.Clear();
             _lastCoinStack.Clear();
             _slotList.Clear();
-            // OrderSlot();
+            OrderSlot();
         }
     }
 }

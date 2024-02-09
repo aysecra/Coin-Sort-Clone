@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Cost Item
   m_EditorClassIdentifier: 
   dealCost: 10
-  slotBeginingCost: 400
-  slotCostIncreasing: 100
+  slotBeginingCost: 50
+  slotCostIncreasing: 25
+  earning: 100

@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using CoinSortClone.Component.Manager;
 using CoinSortClone.Data;
 using CoinSortClone.Interfaces;
 using CoinSortClone.Logic;
 using CoinSortClone.Manager;
 using CoinSortClone.SO;
 using CoinSortClone.Structs;
+using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -18,6 +20,7 @@ namespace CoinSortClone.Component
         [SerializeField] private GameObject disableObject;
         [SerializeField] private GameObject enableObject;
         [SerializeField] private GameObject mergeableObject;
+        [SerializeField] private TMP_Text disableSlotText;
         [SerializeField] private Vector3 size;
 
         private DetectableObjectData _detectableObjectData = new DetectableObjectData();
@@ -30,6 +33,7 @@ namespace CoinSortClone.Component
         private Vector3 _targetPos;
         private bool _isFull;
         private bool _isMergaeble;
+        private int _price;
 
         public bool IsMergeable => _isMergaeble;
 
@@ -39,9 +43,20 @@ namespace CoinSortClone.Component
 
         public int CoinCount => _coinCount;
 
+        public bool IsEnable => isEnable;
+
         public void OnDetected()
         {
-            SlotSelectionController.Select(this);
+            if (isEnable)
+                SlotSelectionController.Select(this);
+            else if(ProgressManager.Instance.GetGold() >= _price)
+            {
+                SetEnable(true);
+                SlotController.IncreaseSlotIndex();
+                ProgressManager.Instance.DecreaseGold((uint)_price);
+                GUIManager.Instance.UpdateGoldText();
+                
+            }
         }
 
         public void AddCoin()
@@ -88,6 +103,13 @@ namespace CoinSortClone.Component
             }
         }
 
+        public void ShowSlotPrice(int price)
+        {
+            _price = price;
+            disableSlotText.text = $"{price}";
+            disableSlotText.gameObject.SetActive(true);
+        }
+
         public void DecreaseCoin(int count)
         {
             _coinCount -= count;
@@ -126,20 +148,20 @@ namespace CoinSortClone.Component
             _detectableObjectData.DetectableScript = this;
         }
 
-        public void SetEnable(bool condition)
+        private void SetEnable(bool condition)
         {
             isEnable = condition;
             SetDetectableObjectData();
             DetectorManager.Instance.AddDetectableObject(_detectableObjectData);
             SlotController.AddSlot(this, condition);
             mergeableObject.SetActive(_isFull);
+            enableObject.SetActive(isEnable);
+            disableObject.SetActive(!isEnable);
         }
 
         private void OnEnable()
         {
             SetEnable(isEnable);
-            enableObject.SetActive(isEnable);
-            disableObject.SetActive(!isEnable);
             SetBeginingPosition();
         }
 

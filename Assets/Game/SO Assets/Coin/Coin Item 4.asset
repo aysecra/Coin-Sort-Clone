@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bf03fb5de2d246fe9c237eea7292bee5, type: 3}
-  m_Name: Coin Item 1
+  m_Name: Coin Item 4
   m_EditorClassIdentifier: 
-  material: {fileID: 2100000, guid: b64ed333c126f414294fddcca70c3342, type: 2}
-  color: {r: 0, g: 0.4056604, b: 0.2688198, a: 1}
-  value: 2
+  material: {fileID: 2100000, guid: 983cbc7d13cf2432db393530264ed6de, type: 2}
+  color: {r: 0, g: 0.18495056, b: 0.4245283, a: 1}
+  value: 5

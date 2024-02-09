@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Coin Item
   m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: e352552b9996f48c6b6561054e88760c, type: 2}
-  color: {r: 0.7924528, g: 0, b: 0, a: 1}
+  color: {r: 0.46226418, g: 0.31542733, b: 0, a: 1}
   value: 1

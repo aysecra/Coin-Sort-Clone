@@ -1,3 +1,4 @@
+using CoinSortClone.Component.Manager;
 using CoinSortClone.Data;
 using CoinSortClone.Logic;
 using CoinSortClone.Pattern;
@@ -19,6 +20,7 @@ namespace CoinSortClone.Manager
 
         public void IncreaseCoinValue(Coin coin)
         {
+            ProgressManager.Instance.IncreaseGold();
             if (coin.CoinType.Value + 1 > ProgressManager.Instance.GetLastOpenedCoin())
             {
                 ProgressManager.Instance.IncreaseOpenedCoin();
@@ -35,6 +37,8 @@ namespace CoinSortClone.Manager
             }
 
             coin.MeshRenderer.material = coinSo.Material;
+            
+            GUIManager.Instance.UpdateGoldText();
         }
 
         public Coin GetCoin(CoinSO coinSo)

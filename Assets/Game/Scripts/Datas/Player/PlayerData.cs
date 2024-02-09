@@ -11,5 +11,6 @@ namespace CoinSortClone.Data
         public List<CoinData> CoinDataList;
         public uint Gold;
         public uint LastOpenedCoin;
+        public int SlotIndex;
     }
 }

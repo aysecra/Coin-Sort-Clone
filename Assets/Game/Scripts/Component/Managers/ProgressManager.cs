@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using CoinSortClone.Data;
 using CoinSortClone.Enums;
@@ -17,7 +18,7 @@ namespace CoinSortClone
         [SerializeField] private List<LevelProgress> levels;
 
         private PlayerData _playerData;
-        private const string _playerDataPrefKey = "PlayerData";
+        // private const string _playerDataPrefKey = "PlayerData";
 
         protected override void Awake()
         {
@@ -78,7 +79,6 @@ namespace CoinSortClone
         public string GetNextLevelName()
         {
             int index = _playerData.LevelIndex + 1 < levels.Count ? _playerData.LevelIndex + 1 : 0;
-            SaveAsyncPlayerData();
             return levels[index].LevelName;
         }
 
@@ -90,7 +90,41 @@ namespace CoinSortClone
         public void IncreaseOpenedCoin()
         {
             _playerData.LastOpenedCoin++;
-            SaveAsyncPlayerData();
+        }
+
+        public uint GetGold()
+        {
+            return _playerData.Gold;
+        }
+
+        public void IncreaseGold()
+        {
+            _playerData.Gold += costSo.Earning;
+        }
+
+        public void DecreaseGold(uint value)
+        {
+            _playerData.Gold -= value;
+        }
+        
+        public void DecreaseGold()
+        {
+            _playerData.Gold -= costSo.DealCost;
+        }
+
+        public void SetSlotIndex(int index)
+        {
+            _playerData.SlotIndex = index;
+        }
+
+        public int GetSlotIndex()
+        {
+            return _playerData.SlotIndex;
+        }
+
+        public int CalculateSlotPrice()
+        {
+            return (int) (costSo.SlotBeginingCost + _playerData.SlotIndex * costSo.SlotCostIncreasing);
         }
 
         public void ClearData()
@@ -101,7 +135,8 @@ namespace CoinSortClone
                 LevelIndex = 0,
                 Gold = 200,
                 CoinDataList = new List<CoinData>(),
-                LastOpenedCoin = 2
+                LastOpenedCoin = 2,
+                SlotIndex = 0
             };
             SaveAsyncPlayerData();
         }
@@ -114,6 +149,11 @@ namespace CoinSortClone
         private void OnDisable()
         {
             EventManager.EventStopListening<LevelEvent>(this);
+        }
+
+        private void OnApplicationQuit()
+        {
+            SaveAsyncPlayerData();
         }
 
         public void OnEventTrigger(LevelEvent currentEvent)
